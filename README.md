@@ -27,3 +27,5 @@ This exercise is meant showcase your creativity and talent in problem solving ag
 * Fully responsive UI
 * Unit Tests of the API
 * Functional Tests of the UI
+
+### Assignment for Pepe Tostado
