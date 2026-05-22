@@ -1,0 +1,35 @@
+services:
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    networks:
+      - bankzero-network
+    
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - api
+    networks:
+      - bankzero-network
+    
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - api
+      - client
+    networks:
+      - bankzero-network
+
+networks:
+  bankzero-network:
+  
