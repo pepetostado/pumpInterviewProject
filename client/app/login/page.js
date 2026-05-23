@@ -109,6 +109,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
+            data-testid="login-submit"
             disabled={loading}
             className="w-full py-3 px-4 rounded-xl bg-blue-500 hover:bg-blue-400 active:bg-blue-600 text-white font-semibold text-sm tracking-wide transition shadow-lg shadow-blue-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
           >

@@ -7,11 +7,11 @@ Someone clones repo, copies env, runs make/compose, logs in with documented test
 ## Checklist
 
 - [ ] `cp env.example .env` + `JWT_SECRET` note
-- [ ] Dev: `make dev-up` (or align naming with Makefile — document actual target)
+- [ ] Dev: `make dev` / stop: `make dev-down` (see root `Makefile`)
 - [ ] URL: `http://localhost:82`
 - [ ] Test users: 1–2 **active** emails + plaintext passwords from seed (e.g. Henderson)
 - [ ] Note: Boyd (`boyd.small@endipine.biz`) is inactive → login must fail
-- [ ] Prod: `make prod-up` + prod build command from constitution
+- [ ] Prod: `make prod` / `make prod-down` + prod build: `docker compose -f docker-compose.yml -f docker-compose.prod.yml build`
 - [ ] curl examples: `/api/health`, login, `/api/me` with Bearer
 - [ ] Link to `pepe/constitution.md` or keep root README assignment section in sync
 

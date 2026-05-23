@@ -67,20 +67,21 @@ nginx forwards `/api/*` to the api container **with the path intact**, so expres
 | GET    | `/api/health`      | no    | `{ ok: true }` — sanity check just used when started to develop so i could have a running server and curl it (**done**) |
 | POST   | `/api/auth/login`  | no    | returns `{ token }`                                                                                                     |
 | GET    | `/api/me`          | yes   | current user profile + balance                                                                                          |
-| PATCH  | `/api/me`          | yes   | update allowed fields                                                                                                   |
+| PATCH  | `/api/me`          | yes   | whitelist fields only; blank/invalid values → **400**; `{}` → **200** no-op (see [`sprint0/PLAN.md`](sprint0/PLAN.md))  |
 | POST   | `/api/auth/logout` | yes   | **done (API)** — 200 `{ ok: true }`; **client** delete token → **S0-3**                                                 |
 
 since not in reqs not doing `GET /api/users` list 
 
 
-## frontend auth (plan)
+## frontend auth (**done — S0-3**)
 
 - `NEXT_PUBLIC_API_URL=/api` → browser hits `http://localhost:82/api/...` through nginx
-- after login store JWT in **localStorage** (easy enough)
-- little `apiFetch()` helper adds `Authorization: Bearer ...`
-- no token → redirect `/login`
-- has token → `/me` (home) with profile + edit form
-- **logout / stale token:** clear localStorage + `/login` — implement in **S0-3** ([`sprint0/03-ui.md`](sprint0/03-ui.md)); API `POST /api/auth/logout` is optional symmetry only (no server revoke)
+- JWT in **localStorage** key `smartpump_token` (`client/lib/auth.js`)
+- `apiFetch()` (`client/lib/apiFetch.js`) adds `Authorization: Bearer ...`; on **401** clears token + hard-nav to `/login` (login uses raw `fetch`, not `apiFetch`)
+- no token on `/` → redirect `/login`; token on `/login` → redirect `/`
+- home loads `GET /api/me`; inline edit form PATCHes whitelist fields (client + server validate non-blank values)
+- **logout / stale token:** `clearToken()` + `/login`; optional `POST /api/auth/logout` (no server revoke)
+- branding: `assets/logo.png` → `client/public/logo.png`; UI title **Smart Pump**
 
 the tradeoff: localStorage + XSS is alright (avoiding cookie/cors stuff yet aware this is a security risk in prod) but httpOnly cookies is better (shipping simple since test assignment)
 
@@ -135,11 +136,13 @@ data/users.json     → seed source (plaintext passwords, do not use raw at runt
 api/                → express, lowdb, jwt, bcrypt
 api/db/             → db.json + helpers (S0-1)
 api/scripts/seed.js → hash seed into db (S0-1)
-client/             → next app (login + dashboard — S0-3)
+client/             → next app (login + dashboard — **done S0-3**)
+client/lib/         → auth.js, apiFetch.js
+client/public/logo.png → SMART Pump logo (served at /logo.png)
 nginx/              → routes / → client, /api/ → api
 docker-compose.yml  → dev
 docker-compose.prod.yml → prod overrides
-Makefile            → dev, prod, test-api, smoke-auth
+Makefile            → dev, prod, test-api, test-client, test, test-e2e, test-all, smoke-auth
 ```
 
 ## what's done vs what's next
@@ -148,16 +151,17 @@ Makefile            → dev, prod, test-api, smoke-auth
 
 ### done ✅
 
-- docker dev/prod stack, nginx :82, `/api/health`
+- docker dev/prod stack, nginx :82, `/api/health`, compose network `smartpump-network`
 - client scaffold (next + tailwind)
 - **S0-1 lowdb + seed** — `api/db/`, bcrypt hashes, docker volumes, `make test-api`
-- **S0-2 auth API** — login, logout, GET/PATCH `/api/me`, `api/test/auth.test.js`, `make smoke-auth` (nginx + seed users)
+- **S0-2 auth API** — login, logout, GET/PATCH `/api/me` (whitelist + value validation), `api/test/auth.test.js`, `make smoke-auth`
+- **S0-3 UI** — login, dashboard, edit, logout, `smartpump_token`, Smart Pump branding → [`sprint0/03-ui.md`](sprint0/03-ui.md)
 
 ### next (in order) 🚧
 
-1. **ui** — login page, dashboard, edit form → [`sprint0/03-ui.md`](sprint0/03-ui.md)
-2. **readme** — test user credentials, `make` targets, prod-build note
-3. **bonus** — Playwright, responsive (API unit tests done in S0-2)
+1. **readme** — test user credentials, `make` targets, prod-build note → [`sprint0/04-readme.md`](sprint0/04-readme.md)
+2. **bonus** — Playwright, responsive → [`sprint0/05-bonus.md`](sprint0/05-bonus.md)
+3. **pre-next-phase polish** (optional, in `03-ui.md`) — hamburger drawer... i liked it better without it (more minimal)
 
 ## non-goals (skipped)
 
@@ -172,5 +176,5 @@ Makefile            → dev, prod, test-api, smoke-auth
 - ideation: `pepe/doc0.ideation.md`
 - assignment text: root `README.md`
 
-last updated: after S0-2 + doc/smoke gate (see sprint0/STATUS.md).
+last updated: after S0-3 + Smart Pump rebrand (see sprint0/STATUS.md).
 

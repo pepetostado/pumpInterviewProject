@@ -1,13 +1,15 @@
 # S0-5 · bonus
 
-Only after S0-1–4 green, including prod compose build.
+Refs: test map [`TESTS.md`](TESTS.md).
 
 ## Checklist
 
-- [x] API unit tests — login (200 active, 401 inactive/bad pw/unknown), GET/PATCH `/api/me` (auth + PATCH whitelist) — **done in S0-2** ([`api/test/auth.test.js`](../../api/test/auth.test.js)); nginx smoke: `make smoke-auth`
-- [ ] Playwright — login → balance visible → edit field → value persists
-- [ ] Responsive spot-check 375px / 768px (mostly covered if mobile-first in S0-3)
+- [x] API unit tests — `make test-api` ([`api/test/auth.test.js`](../../api/test/auth.test.js), [`db.test.js`](../../api/test/db.test.js))
+- [x] nginx smoke — `make smoke-auth` ([`scripts/smoke-auth.sh`](../../scripts/smoke-auth.sh))
+- [x] UI functional — `make test-e2e` ([`client/e2e/happy-path.spec.js`](../../client/e2e/happy-path.spec.js))
+- [x] Client unit — `make test-client` ([`auth.test.js`](../../client/test/auth.test.js), [`apiFetch.test.js`](../../client/test/apiFetch.test.js))
+- [ ] Responsive automation — mobile-first UI shipped; no Playwright viewport suite yet
 
 ## Done when
 
-Bonus items from root README are demonstrable; core flow still works.
+README bonus items demonstrable: `make test` + `make dev` + `make test-e2e`.

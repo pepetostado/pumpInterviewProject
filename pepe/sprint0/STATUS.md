@@ -14,7 +14,7 @@ Living handoff doc: what is done, what is next. Update when a track ships.
 - [x] Docker prod — multistage Dockerfiles, `docker-compose.prod.yml`, client `volumes: !reset []`
 - [x] `/api/health` → `{ ok: true }` through nginx
 - [x] Client scaffold — Next.js App Router, Tailwind
-- [x] `Makefile` — `dev`, `dev-down`, `prod`, `prod-down`, `logs`, `test-api`, `smoke-auth`
+- [x] `Makefile` — `dev`, `test-api`, `test-client`, `test`, `test-e2e`, `test-all`, `smoke-auth` (map: [`TESTS.md`](TESTS.md))
 - [x] `env.example` — `JWT_SECRET`, `NEXT_PUBLIC_API_URL=/api`
 
 ### S0-1 · lowdb + seed
@@ -45,11 +45,11 @@ Track doc: [`02-auth-api.md`](02-auth-api.md)
 
 **Key paths**
 
-| Path | Role |
-|------|------|
-| `data/users.json` | Seed source (plaintext passwords, git) |
-| `api/db/db.json` | Runtime DB (gitignored; volume in Docker) |
-| `api/test/fixtures/users.json` | Small fixture for unit tests |
+| Path                           | Role                                      |
+| ------------------------------ | ----------------------------------------- |
+| `data/users.json`              | Seed source (plaintext passwords, git)    |
+| `api/db/db.json`               | Runtime DB (gitignored; volume in Docker) |
+| `api/test/fixtures/users.json` | Small fixture for unit tests              |
 
 **Verify S0-1 + S0-2**
 
@@ -77,41 +77,50 @@ Track doc: [`03-ui.md`](03-ui.md)
 - [x] Stale token — `apiFetch` 401 clears storage and hard-navigates `/login`
 - [x] Logout — optional `POST /api/auth/logout` then always `clearToken()` + redirect `/login`
 - [x] Stripped Next.js starter boilerplate; mobile-first dark-glass Tailwind UI
-- [x] `layout.js` title → "Smart Pump"
+- [x] `layout.js` title → "Smart Pump"; logo `client/public/logo.png` (`/logo.png`) on login + header
+- [x] Docker compose network → `smartpump-network` (dev + prod)
+- [x] Client edit validation — all whitelist fields required on Save; positive integer `age`; email hidden in header while editing
 
-**Pre-next-phase (tracked in [`03-ui.md`](03-ui.md)):** hamburger drawer, `/edit` route, client unit tests.
+**Key client paths**
+
+| Path                       | Role                              |
+| -------------------------- | --------------------------------- |
+| `client/lib/auth.js`       | `smartpump_token` in localStorage |
+| `client/lib/apiFetch.js`   | Bearer + 401 → clear + `/login`   |
+| `client/app/login/page.js` | Login (raw fetch); authed → `/`   |
+| `client/app/page.js`       | Dashboard + inline edit + logout  |
+
+**Tests (S0-3 + bonus):** `make test-client` (5), `make test-e2e` (2), `make test-all` with `make dev` — see [`TESTS.md`](TESTS.md).
 
 **Verify S0-3**
 
 ```bash
 cp env.example .env
 make dev
-# browser http://localhost:82/login → login (henderson.briggs@geeknet.net / 23derd*334)
-# → dashboard (name, balance) → EDIT → change phone → Save → reload → still authed
-# → Logout → /login, localStorage empty
-make test-api && make smoke-auth   # API should stay green
+make test-all    # or: make test && make test-e2e && make smoke-auth
+# browser: http://localhost:82/login → Henderson → edit → logout
 ```
 
 ---
 
 ## Not done yet (in order)
 
-| Track | Doc | Summary |
-|-------|-----|---------|
-| **S0-4** | [`04-readme.md`](04-readme.md) | reviewer docs, test users, make targets |
-| **S0-5** | [`05-bonus.md`](05-bonus.md) | Playwright, responsive (API tests + smoke done) |
+| Track    | Doc                            | Summary                                         |
+| -------- | ------------------------------ | ----------------------------------------------- |
+| **S0-4** | [`04-readme.md`](04-readme.md) | reviewer docs, test users, make targets         |
+| **S0-5** | [`05-bonus.md`](05-bonus.md)   | mostly done; optional responsive viewport tests |
 
 ---
 
 ## API routes today
 
-| Method | Path | Status |
-|--------|------|--------|
-| GET | `/api/health` | Done |
-| POST | `/api/auth/login` | Done |
-| POST | `/api/auth/logout` | Done (`requireAuth`) |
-| GET | `/api/me` | Done |
-| PATCH | `/api/me` | Done |
+| Method | Path               | Status               |
+| ------ | ------------------ | -------------------- |
+| GET    | `/api/health`      | Done                 |
+| POST   | `/api/auth/login`  | Done                 |
+| POST   | `/api/auth/logout` | Done (`requireAuth`) |
+| GET    | `/api/me`          | Done                 |
+| PATCH  | `/api/me`          | Done                 |
 
 ---
 
@@ -121,5 +130,5 @@ Copy the block from [`03-ui.md`](03-ui.md) + **Done** section above.
 
 ---
 
-*Last updated: after S0-3 gate — login/dashboard/edit/logout shipped; `make test-api` + `make smoke-auth` green; docs reconciled.*
+*Last updated: tests reconciled — `make test` (22), `make test-e2e` (2), `make smoke-auth`, `make test-all`; see [`TESTS.md`](TESTS.md).*
 

@@ -39,6 +39,15 @@ To reproduce on your machine you only need npm & docker
 >> cp env.example .env
 >> docker compose up --build
 
+**Tests** — map: [`pepe/sprint0/TESTS.md`](pepe/sprint0/TESTS.md)
+
+>> make test          # unit only (no docker): 22 tests
+>> make dev           # then, with stack on :82:
+>> make test-all      # unit + Playwright UI + API smoke
+
 ## PROD (just some setup differences)
 
 >> docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
+
+## Mobile responsivenes
+I tested on an emulator running within my same machine and it looked pretty responsive :)

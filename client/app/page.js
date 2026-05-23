@@ -125,7 +125,7 @@ const Icons = {
 
 // editing fomr
 
-function EditField({ label, id, type = 'text', value, onChange }) {
+function EditField({ label, id, type = 'text', value, onChange, testId }) {
   return (
     <div className="space-y-1">
       <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider" htmlFor={id}>
@@ -134,6 +134,7 @@ function EditField({ label, id, type = 'text', value, onChange }) {
       <input
         id={id}
         type={type}
+        data-testid={testId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
@@ -328,6 +329,8 @@ export default function HomePage() {
           <div className="flex gap-3 mt-1">
             <StatBadge label="Balance" value={user.balance ?? '—'} />
             <button
+              type="button"
+              data-testid="edit-profile"
               onClick={startEdit}
               className="flex flex-col items-center justify-center gap-0.5 bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20 rounded-xl px-5 py-3 min-w-[110px] transition"
             >
@@ -379,6 +382,7 @@ export default function HomePage() {
             <EditField
               label="Phone"
               id="phone"
+              testId="edit-phone"
               value={form.phone}
               onChange={(v) => setForm((f) => ({ ...f, phone: v }))}
             />
@@ -413,6 +417,7 @@ export default function HomePage() {
             <div className="flex gap-3 pt-2">
               <button
                 type="submit"
+                data-testid="save-profile"
                 disabled={saving}
                 className="flex-1 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-400 text-white text-sm font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20"
               >

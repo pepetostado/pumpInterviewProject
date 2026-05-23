@@ -26,7 +26,7 @@ sequenceDiagram
     A-->>B: 401
   else ok
     A-->>B: {token}
-    B->>B: localStorage.setItem
+    B->>B: localStorage smartpump_token
   end
 
   B->>N: GET /api/me + Bearer
@@ -57,9 +57,14 @@ flowchart TB
     me[get/patch me]
     seed[seed hashes]
   end
-  subgraph e2e [UI optional]
+  subgraph ui [UI S0-3 done]
+    loginPg["/login"]
+    dash["/ dashboard"]
+  end
+  subgraph e2e [S0-5 optional]
     pw[playwright login flow]
   end
+  loginPg --> dash
   login --> me
   seed --> login
 
