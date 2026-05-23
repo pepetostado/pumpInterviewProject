@@ -1,0 +1,4 @@
+[env]
+  PORT=3000
+  JWT_SECRET=test
+  NEXT_PUBLIC_API_URL=/api
