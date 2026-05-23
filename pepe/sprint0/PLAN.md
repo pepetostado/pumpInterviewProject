@@ -2,7 +2,7 @@
 
 <i>AI assisted (gemini 3 flash)</i>
 
-Source of truth: [`constitution.md`](../constitution.md). Diagrams: [`architecture/diagrams0.md`](../architecture/diagrams0.md). Edge decisions: [`edgeCases.md`](edgeCases.md).
+Source of truth: [`constitution.md`](../constitution.md). **Progress:** [`STATUS.md`](STATUS.md). Diagrams: [`architecture/diagrams0.md`](../architecture/diagrams0.md). Edge decisions: [`edgeCases.md`](edgeCases.md).
 
 ## Step 0
 

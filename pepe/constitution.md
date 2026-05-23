@@ -142,23 +142,20 @@ Makefile            → dev-up, prod-up, etc.
 
 ## what's done vs what's next
 
+**Detailed checklist:** [`pepe/sprint0/STATUS.md`](sprint0/STATUS.md) (update when a track ships).
+
 ### done ✅
 
-- docker dev stack runs (api watch, next dev, nginx)
-- `/api/health` works through nginx on :82
-- api `package.json` + lockfile, ESM, deps installed
-- client scaffolded (next + tailwind etc.)
-- multistage dockerfiles (api dev/prod, client dev/build/prod)
-- prod compose with volume reset
-- makefile + readme basics for dev/prod
+- docker dev/prod stack, nginx :82, `/api/health`
+- client scaffold (next + tailwind)
+- **S0-1 lowdb + seed** — `api/db/`, bcrypt hashes, docker volumes, `make test-api`
 
 ### next (in order) 🚧
 
-1. **lowdb** — `api/db/`, seed script, bcrypt hashes, volume for `api/db`
-2. **auth api** — login, jwt middleware, GET/PATCH `/api/me`
-3. **ui** — login page, dashboard, edit form, wireframes, mobile-first
-4. **readme** — test user credentials, `make` targets, prod-build note
-5. **bonus** — api tests, playwright, responsive (covered by mobile first)
+1. **auth api** — login, jwt middleware, GET/PATCH `/api/me` → [`sprint0/02-auth-api.md`](sprint0/02-auth-api.md)
+2. **ui** — login page, dashboard, edit form
+3. **readme** — test user credentials, `make` targets, prod-build note
+4. **bonus** — auth route tests, playwright, responsive
 
 ## non-goals (skipped)
 
@@ -173,5 +170,5 @@ Makefile            → dev-up, prod-up, etc.
 - ideation: `pepe/doc0.ideation.md`
 - assignment text: root `README.md`
 
-last updated: after docker dev/prod was green, before lowdb phase.
+last updated: after S0-1 (see sprint0/STATUS.md).
 
