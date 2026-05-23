@@ -1,28 +1,17 @@
-/* 
-
-routes: (on my mind so far)
-
-/health -> { ok: true } 
-/api/login -> { email: string, password: string } -> { token: string }
-/api/logout -> { token: string } -> { ok: true }
-
-// i think the following will be GET only
-/api/users -> { users: [] } 
-/api/users/:id -> { user: {} }
-/api/users/:id/balance -> { balance: 0 } 
-
-*/
-
 import express from 'express';
+import { ensureSeeded, initDb } from './db/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.get('/api/health', (_req, res) => {
-    res.json({ ok: true });
+  res.json({ ok: true });
 });
+
+// db setup (1)
+await initDb();
+await ensureSeeded();
 
 app.listen(PORT, () => {
-    console.log(`API running on port:${PORT}`);
+  console.log(`API running on port:${PORT}`);
 });
-

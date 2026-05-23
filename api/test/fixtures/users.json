@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "_id": "test-active",
+      "email": "active@test.com",
+      "isActive": true,
+      "password": "secret123",
+      "balance": "$100.00"
+    },
+    {
+      "_id": "test-inactive",
+      "email": "inactive@test.com",
+      "isActive": false,
+      "password": "other456",
+      "balance": "$50.00"
+    }
+  ]
+}
