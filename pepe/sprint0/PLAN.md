@@ -8,7 +8,7 @@ Source of truth: [`constitution.md`](../constitution.md). **Progress:** [`STATUS
 
 **Reuse:** express + deps, nginx `:82`, docker dev/prod, `data/users.json`, client scaffold.
 
-**Cut:** server logout, `GET /api/users`, httpOnly cookies, session store, CI.
+**Cut:** `GET /api/users`, httpOnly cookies, session store, CI. (Logout stub shipped in S0-2.)
 
 **Order:** `01` → `02` → `03` → `04` → `05` (bonus only when core is green on prod build).
 
@@ -30,7 +30,7 @@ Session/redis, admin user list, password reset, email change, cookie auth (unles
 
 | Need         | Where                                           |
 | ------------ | ----------------------------------------------- |
-| Health route | `api/server.js`                                 |
+| Health route | `api/app.js`                                    |
 | Deps         | `api/package.json`                              |
 | Seed source  | `data/users.json` (4 active)                    |
 | Proxy        | `nginx/default.conf`                            |
@@ -39,7 +39,7 @@ Session/redis, admin user list, password reset, email change, cookie auth (unles
 
 ## Test strategy
 
-- **Must:** login + `/api/me` unit tests; curl smoke on `:82`
+- **Must:** login + `/api/me` unit tests (`auth.test.js`); nginx smoke (`make smoke-auth`)
 - **Bonus:** Playwright happy path
 - **Skip:** load/chaos
 

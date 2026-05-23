@@ -1,14 +1,8 @@
-import express from 'express';
+import app from './app.js';
 import { ensureSeeded, initDb } from './db/index.js';
 
-const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true });
-});
-
-// db setup (1)
 await initDb();
 await ensureSeeded();
 

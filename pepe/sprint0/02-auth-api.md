@@ -4,21 +4,21 @@ Refs: [`constitution.md`](../constitution.md) (routes, valid user), [`edgeCases.
 
 ## Goal
 
-`POST /api/auth/login`, `GET /api/me`, `PATCH /api/me` (+ optional logout stub). Uniform 401 on login failure.
+`POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/me`, `PATCH /api/me`. Uniform 401 on credential login failure.
 
 ## Checklist
 
-- [ ] `express.json()` on app
-- [ ] `POST /api/auth/login` — body `{ email, password }`, bcrypt compare, `isActive === true`, JWT `sub: _id`
-- [ ] `requireAuth` — `Authorization: Bearer`, verify `JWT_SECRET`, set `req.userId`
-- [ ] `GET /api/me` — profile + balance; strip password/hash from response
-- [ ] `PATCH /api/me` — whitelist only (see PLAN.md); reject `balance`, `_id`, `password` → **400**; empty body → **200** no-op
-- [ ] (optional) `POST /api/auth/logout` — 200 stub
-- [ ] Login failures: unknown email, bad pw, inactive (Boyd) → all **401**, same shape
-- [ ] curl: Henderson active → `{ token }`
-- [ ] curl: Boyd / bad pw / fake email → 401
-- [ ] curl: `/api/me` with token → 200; without → 401
+- [x] `express.json()` on app
+- [x] `POST /api/auth/login` — body `{ email, password }`, bcrypt compare, `isActive === true`, JWT `sub: _id`
+- [x] `requireAuth` — `Authorization: Bearer`, verify `JWT_SECRET`, set `req.userId`
+- [x] `GET /api/me` — profile + balance; strip password/hash from response
+- [x] `PATCH /api/me` — whitelist only (see PLAN.md); reject `balance`, `_id`, `password` → **400**; empty body → **200** no-op
+- [x] `POST /api/auth/logout` — 200 `{ ok: true }` (requires auth)
+- [x] Login failures: unknown email, bad pw, inactive (Boyd) → all **401**, same shape
+- [x] curl: Henderson active → `{ token }`
+- [x] curl: Boyd / bad pw / fake email → 401
+- [x] curl: `/api/me` with token → 200; without → 401
 
 ## Done when
 
-All constitution API routes (except optional logout) work through `http://localhost:82/api/...`.
+All constitution API routes work through `http://localhost:82/api/...`.

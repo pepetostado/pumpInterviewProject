@@ -4,7 +4,7 @@ Only after S0-1–4 green, including prod compose build.
 
 ## Checklist
 
-- [ ] API unit tests — login (200 active, 401 inactive/bad pw/unknown), GET/PATCH `/api/me` (auth + PATCH whitelist)
+- [x] API unit tests — login (200 active, 401 inactive/bad pw/unknown), GET/PATCH `/api/me` (auth + PATCH whitelist) — **done in S0-2** ([`api/test/auth.test.js`](../../api/test/auth.test.js)); nginx smoke: `make smoke-auth`
 - [ ] Playwright — login → balance visible → edit field → value persists
 - [ ] Responsive spot-check 375px / 768px (mostly covered if mobile-first in S0-3)
 
