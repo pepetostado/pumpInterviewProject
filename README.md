@@ -38,6 +38,6 @@ To reproduce on your machine you only need npm & docker
 >> docker compose up --build
 Visit → http://localhost:82
 
-## PROD
+## PROD (just some setup differences)
 
 >> docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build

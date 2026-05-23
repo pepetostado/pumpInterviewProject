@@ -11,3 +11,5 @@
 5. guid vs _id... which one to use as unique identifier?? will figure it out later... I'll just setup docker for now
 
 6. valid user -> match(email,password) && isActive... also if time allows JWT would be nice for backend frontend easier interaction without the extra store setup for session ids
+
+7. docker setup done, now running both frontend and backend lets dive in now

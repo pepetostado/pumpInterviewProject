@@ -3,7 +3,7 @@
 routes: (on my mind so far)
 
 /health -> { ok: true } 
-/api/login -> { username: string, password: string } -> { token: string }
+/api/login -> { email: string, password: string } -> { token: string }
 /api/logout -> { token: string } -> { ok: true }
 
 // i think the following will be GET only
