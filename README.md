@@ -1,53 +1,80 @@
-# Simple Developer Exercise 
+# Smart Pump (dev exercise)
 
-The savvy cats over at SMART Pump would like to be able to allow users to login to their account, check their balance and update their personal details. Write a simple web application (API and UI) using node.js and lowdb that lets users accomplish those tasks. 
+Login, view balance, edit profile. Node.js API + Next.js UI + lowdb. Seed data: [`data/users.json`](data/users.json). Wireframes: [`assets/wireframes.png`](assets/wireframes.png).
 
-Feel free to use any other libraries or tool chains as long as the core code is javascript and node.js. npm (https://www.npmjs.org) is your friend - no need to recreate the wheel. 
+---
 
-You will find the base data file in `/data`
+## New machine setup
 
-Wireframes: `assets/wireframes.png`
+**Install**
 
-## Time limits
+| Tool                                          | Why                                                       |
+| --------------------------------------------- | --------------------------------------------------------- |
+| [Docker](https://docs.docker.com/get-docker/) | Runs API, client, nginx on port **82**                    |
+| [Node.js 20+](https://nodejs.org/)            | `make test` / `make test-all` on the host                 |
+| `make`                                        | Targets below (macOS/Linux; Windows: use WSL or Git Bash) |
 
-This exercise is meant showcase your creativity and talent in problem solving against a real world scenario. To that end it should not consume your every waking moment. We recommend at max spending 3 evenings of time on the exercise. 
+**Run the app**
 
-## Requirements
+```bash
+git clone https://github.com/pepetostado/pumpInterviewProject.git && cd dev-test
+cp env.example .env          # JWT_SECRET + NEXT_PUBLIC_API_URL=/api
+make dev                     # first run builds images; wait for logs to settle
+```
 
-* Login to the app via email and password
-* Restrict access to valid a User
-* Once logged in show the details of the user on the page
-* Authorized users can check their account balance
-* Allow the user to change their details
-* lowdb (DB) -> https://github.com/typicode/lowdb
-* node.js -> http://nodejs.org/ 
+Open **http://localhost:82**
 
-## Bonus Points
+**Try it:** active user `henderson.briggs@geeknet.net` / `23derd*334` (from seed). Inactive user Boyd returns 401.
 
-* Fully responsive UI
-* Unit Tests of the API
-* Functional Tests of the UI
+Stop stack: `make dev-down` (or Ctrl+C in the dev terminal).
 
-### Assignment for Pepe Tostado
+---
 
-To reproduce on your machine you only need npm & docker
+## Tests
 
-**Visit** → http://localhost:82 (once docker is running)
+Full map: [`pepe/sprint0/TESTS.md`](pepe/sprint0/TESTS.md)
 
-## DEV
+| Command         | Docker `:82` running? | What                                 |
+| --------------- | --------------------- | ------------------------------------ |
+| `make test`     | No                    | 22 unit tests (API + client)         |
+| `make test-all` | **Yes**               | Unit + 2 Playwright e2e + auth smoke |
 
->> cp env.example .env
->> docker compose up --build
+```bash
+# terminal 1
+make dev
 
-**Tests** — map: [`pepe/sprint0/TESTS.md`](pepe/sprint0/TESTS.md)
+# terminal 2
+make test-all
+```
 
->> make test          # unit only (no docker): 22 tests
->> make dev           # then, with stack on :82:
->> make test-all      # unit + Playwright UI + API smoke
+First `make test-e2e` downloads Chromium into `client/.playwright-browsers/` (gitignored; macOS arm64/x64 supported). Expect **19** API + **5** client + **2** e2e + smoke **ok**.
 
-## PROD (just some setup differences)
+Unit only (no browser): `make test`
 
->> docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
+---
 
-## Mobile responsivenes
-I tested on an emulator running within my same machine and it looked pretty responsive :)
+## Makefile cheatsheet
+
+`make help` lists targets. Common ones:
+
+- `make dev` / `make dev-down` — dev stack at http://localhost:82
+- `make test-api` / `make test-client` / `make test-e2e` / `make smoke-auth` — run one layer
+- `make logs` — follow compose logs
+
+**Prod-style run** (no bind mounts):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
+```
+
+Same URL: http://localhost:82
+
+---
+
+## Original brief (recruiter)
+
+**Requirements:** email/password login, active users only, show profile + balance, edit details, lowdb + Node.
+
+**Bonus (this repo):** responsive UI, API unit tests, UI functional tests (Playwright).
+
+**Time box:** ~3 evenings suggested.
