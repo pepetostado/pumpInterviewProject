@@ -32,13 +32,12 @@ services:
       - api
       - client
     networks:
-      - bankzero-network
+      - smartpump-network
 
 volumes:
   api-db:
   api-node-modules:
-  client-node-modules:
 
 networks:
-  bankzero-network:
+  smartpump-network:
   

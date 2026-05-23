@@ -32,11 +32,12 @@ This exercise is meant showcase your creativity and talent in problem solving ag
 
 To reproduce on your machine you only need npm & docker
 
+**Visit** → http://localhost:82 (once docker is running)
+
 ## DEV
 
 >> cp env.example .env
 >> docker compose up --build
-Visit → http://localhost:82
 
 ## PROD (just some setup differences)
 

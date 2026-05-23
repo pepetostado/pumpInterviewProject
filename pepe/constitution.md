@@ -1,10 +1,10 @@
-# BankZero Constitution (aided with llm)
+# Smart Pump Constitution (aided with llm)
 
 ok so this is basically the "rules we agreed on" doc for this dev test project. if i'm confused later i read this first 
 
 ## what we're building
 
-a tiny fake bank app:
+a tiny SMART Pump account app (per assignment):
 
 - login with **email + password**
 - only **valid** users get in
@@ -68,7 +68,7 @@ nginx forwards `/api/*` to the api container **with the path intact**, so expres
 | POST   | `/api/auth/login`  | no    | returns `{ token }`                                                                                                     |
 | GET    | `/api/me`          | yes   | current user profile + balance                                                                                          |
 | PATCH  | `/api/me`          | yes   | update allowed fields                                                                                                   |
-| POST   | `/api/auth/logout` | yes   | **done (API)** — 200 `{ ok: true }`; **client** delete token → **S0-3**                                               |
+| POST   | `/api/auth/logout` | yes   | **done (API)** — 200 `{ ok: true }`; **client** delete token → **S0-3**                                                 |
 
 since not in reqs not doing `GET /api/users` list 
 
@@ -102,7 +102,9 @@ volumes:
 - `./api:/app`
 - `api-node-modules` volume so node_modules isn't wrecked by the bind mount
 
-**dev client:** target `dev`, `next dev`, same volume pattern for client
+**dev client:**
+
+Dockerfiles use node:20-slim and install deps in the image (npm ci in base/dev); client dev copies that tree with COPY --from=base and only runs npm run dev (no runtime install)
 
 ### prod
 

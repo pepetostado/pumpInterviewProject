@@ -12,7 +12,7 @@ Refs: [`constitution.md`](../constitution.md) (routes, valid user), [`edgeCases.
 - [x] `POST /api/auth/login` — body `{ email, password }`, bcrypt compare, `isActive === true`, JWT `sub: _id`
 - [x] `requireAuth` — `Authorization: Bearer`, verify `JWT_SECRET`, set `req.userId`
 - [x] `GET /api/me` — profile + balance; strip password/hash from response
-- [x] `PATCH /api/me` — whitelist only (see PLAN.md); reject `balance`, `_id`, `password` → **400**; empty body → **200** no-op
+- [x] `PATCH /api/me` — whitelist only (see PLAN.md); reject forbidden keys and blank/invalid values → **400**; empty body `{}` → **200** no-op
 - [x] `POST /api/auth/logout` — 200 `{ ok: true }` (requires auth)
 - [x] Login failures: unknown email, bad pw, inactive (Boyd) → all **401**, same shape
 - [x] curl: Henderson active → `{ token }`

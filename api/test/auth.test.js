@@ -42,7 +42,7 @@ async function login(origin, email, password) {
 }
 
 beforeEach(async () => {
-  tempDir = await mkdtemp(join(tmpdir(), 'bankzero-auth-'));
+  tempDir = await mkdtemp(join(tmpdir(), 'smartpump-auth-'));
   dbPath = join(tempDir, 'db.json');
   process.env.DB_PATH = dbPath;
   process.env.SEED_USERS_PATH = seedPath;
@@ -184,6 +184,39 @@ describe('PATCH /api/me', () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify(body),
+        });
+        assert.equal(res.status, 400, JSON.stringify(body));
+        assert.deepEqual(await res.json(), { error: 'Bad Request' });
+      }
+    } finally {
+      srv.close();
+    }
+  });
+
+  it('rejects blank or invalid whitelisted values with 400', async () => {
+    const { srv, origin } = await listen(app);
+    try {
+      const lr = await login(origin, 'active@test.com', 'secret123');
+      const { token } = await lr.json();
+      const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      };
+
+      for (const body of [
+        { phone: '' },
+        { phone: '   ' },
+        { name: { first: '', last: 'User' } },
+        { name: { first: 'Active', last: '  ' } },
+        { age: '' },
+        { age: 0 },
+        { age: 1.5 },
+        { company: '\t' },
+      ]) {
+        const res = await fetch(`${origin}/api/me`, {
+          method: 'PATCH',
+          headers,
           body: JSON.stringify(body),
         });
         assert.equal(res.status, 400, JSON.stringify(body));

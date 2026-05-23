@@ -17,7 +17,7 @@ services:
       - api-db:/app/db
       - ./data:/data:ro
     networks:
-      - bankzero-network
+      - smartpump-network
     
   client:
     build:
@@ -33,10 +33,13 @@ services:
     depends_on:
       - api
     volumes:
-      - ./client:/app
-      - client-node-modules:/app/node_modules
+      - ./client/app:/app/app
+      - ./client/lib:/app/lib
+      - ./client/public:/app/public
+      - /app/node_modules
+      - /app/.next
     networks:
-      - bankzero-network
+      - smartpump-network
     
   nginx:
     build:
@@ -48,13 +51,12 @@ services:
       - api
       - client
     networks:
-      - bankzero-network
+      - smartpump-network
 
 volumes:
   api-db:
   api-node-modules:
-  client-node-modules:
 
 networks:
-  bankzero-network:
+  smartpump-network:
   

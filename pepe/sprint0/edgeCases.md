@@ -7,7 +7,9 @@
 
 * PATCH /me
     1. balance, _id, pw :: 400 — `auth.test.js`; smoke PATCH balance
-    2. empty :: 200 — `auth.test.js`; smoke PATCH `{}`
+    2. empty body `{}` :: 200 no-op — `auth.test.js`; smoke PATCH `{}`
+    3. blank whitelisted value :: 400 — `""`, whitespace-only, empty `name.first` / `name.last`, invalid `age` — `auth.test.js`
+    4. UI edit save :: all form fields required non-blank — `03-ui.md` / `client/app/page.js`
 
 * SEED 
     1. rerun :: idempotent — `db.test.js`

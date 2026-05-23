@@ -38,7 +38,7 @@ Track doc: [`02-auth-api.md`](02-auth-api.md)
 - [x] `POST /api/auth/login` — bcrypt, `isActive`, JWT `sub: _id` → `{ token }`
 - [x] `requireAuth` — Bearer + `JWT_SECRET`, `req.userId` (`api/middleware/requireAuth.js`)
 - [x] `GET /api/me` — sanitized body (no `password` / `passwordHash`), includes `balance`
-- [x] `PATCH /api/me` — whitelist `name`, `phone`, `address`, `age`, `company`, `eyeColor`; other keys → 400; `{}` → 200 no-op
+- [x] `PATCH /api/me` — whitelist only; blank/invalid values → 400; `{}` → 200 no-op (see PLAN.md PATCH value rules)
 - [x] `POST /api/auth/logout` — 200 `{ ok: true }` (authenticated)
 - [x] Login failures unified **401** `{ error: "Unauthorized" }`
 - [x] Tests — [`api/test/auth.test.js`](../../api/test/auth.test.js) — maps [`edgeCases.md`](edgeCases.md) API paths (inactive, unknown email, bad password, JWT errors, PATCH rules, logout)
@@ -65,11 +65,39 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml build
 
 ---
 
+### S0-3 · UI
+
+Track doc: [`03-ui.md`](03-ui.md)
+
+- [x] `client/lib/auth.js` — `getToken` / `setToken` / `clearToken` (`smartpump_token`, SSR-safe)
+- [x] `client/lib/apiFetch.js` — Bearer, 401 → `clearToken()` + `location.assign('/login')`; never used for login itself
+- [x] `client/app/login/page.js` — email/password form, raw `fetch`, `setToken` → redirect `/`; already-authed → redirect `/`
+- [x] `client/app/page.js` — token guard, `GET /api/me`, avatar with initials, balance + EDIT pill, info rows, inline edit form, logout
+- [x] Edit form — PATCH whitelist; all fields required on Save; merges API response
+- [x] Stale token — `apiFetch` 401 clears storage and hard-navigates `/login`
+- [x] Logout — optional `POST /api/auth/logout` then always `clearToken()` + redirect `/login`
+- [x] Stripped Next.js starter boilerplate; mobile-first dark-glass Tailwind UI
+- [x] `layout.js` title → "Smart Pump"
+
+**Pre-next-phase (tracked in [`03-ui.md`](03-ui.md)):** hamburger drawer, `/edit` route, client unit tests.
+
+**Verify S0-3**
+
+```bash
+cp env.example .env
+make dev
+# browser http://localhost:82/login → login (henderson.briggs@geeknet.net / 23derd*334)
+# → dashboard (name, balance) → EDIT → change phone → Save → reload → still authed
+# → Logout → /login, localStorage empty
+make test-api && make smoke-auth   # API should stay green
+```
+
+---
+
 ## Not done yet (in order)
 
 | Track | Doc | Summary |
 |-------|-----|---------|
-| **S0-3** | [`03-ui.md`](03-ui.md) | login page, dashboard, edit form |
 | **S0-4** | [`04-readme.md`](04-readme.md) | reviewer docs, test users, make targets |
 | **S0-5** | [`05-bonus.md`](05-bonus.md) | Playwright, responsive (API tests + smoke done) |
 
@@ -93,5 +121,5 @@ Copy the block from [`03-ui.md`](03-ui.md) + **Done** section above.
 
 ---
 
-*Last updated: after S0-2 gate — `make test-api`, `make smoke-auth`, docs reconciled.*
+*Last updated: after S0-3 gate — login/dashboard/edit/logout shipped; `make test-api` + `make smoke-auth` green; docs reconciled.*
 

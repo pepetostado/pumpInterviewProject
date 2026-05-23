@@ -1,19 +1,27 @@
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
 
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-FROM base AS dev
-COPY . .
+FROM node:20-slim AS dev
+
+WORKDIR /app
+COPY --from=base /app .
+COPY next.config.mjs postcss.config.mjs jsconfig.json eslint.config.mjs ./
 EXPOSE 3000
 CMD ["npm", "run", "dev"]
 
-FROM base AS build
+FROM node:20-slim AS build
+
+WORKDIR /app
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/package*.json ./
 COPY . .
 RUN npm run build
 
-FROM base AS prod
+FROM node:20-slim AS prod
+
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"

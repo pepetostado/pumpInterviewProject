@@ -28,7 +28,7 @@ let tempDir;
 let dbPath;
 
 beforeEach(async () => {
-  tempDir = await mkdtemp(join(tmpdir(), 'bankzero-db-'));
+  tempDir = await mkdtemp(join(tmpdir(), 'smartpump-db-'));
   dbPath = join(tempDir, 'db.json');
   process.env.DB_PATH = dbPath;
   process.env.SEED_USERS_PATH = seedPath;

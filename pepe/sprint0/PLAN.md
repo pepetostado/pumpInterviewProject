@@ -22,6 +22,17 @@ Browser → nginx → api (lowdb) + client. Seed copies hashed users from `data/
 
 `name`, `phone`, `address`, `age`, `company`, `eyeColor` — not `email`, `balance`, `isActive`, `password`, `_id`, `guid`.
 
+### PATCH value rules
+
+- **Empty body `{}`** → **200** no-op (unchanged).
+- **Any key in the body** must be non-blank after trim (whitespace-only counts as blank) → else **400**.
+- **`name`:** both `first` and `last` required non-empty strings.
+- **`age`:** finite integer `>= 1` (no empty, no `NaN`).
+- **Strings** (`phone`, `address`, `company`, `eyeColor`): non-empty after trim.
+- Server trims string fields on successful write; `name` parts trimmed separately.
+
+UI (S0-3) validates the **full edit form** on Save so no whitelisted field is left blank, even if only one field changed.
+
 ## NOT in scope
 
 Session/redis, admin user list, password reset, email change, cookie auth (unless reopened).

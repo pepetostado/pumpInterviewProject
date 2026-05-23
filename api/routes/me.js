@@ -14,6 +14,37 @@ const PATCH_WHITELIST = new Set([
   'eyeColor',
 ]);
 
+function nonEmptyString(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function isValidPatchValue(key, value) {
+  if (key === 'name') {
+    return (
+      value &&
+      typeof value === 'object' &&
+      nonEmptyString(value.first) &&
+      nonEmptyString(value.last)
+    );
+  }
+  if (key === 'age') {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 1;
+  }
+  return nonEmptyString(value);
+}
+
+function applyPatchValue(user, key, value) {
+  if (key === 'name') {
+    user.name = { first: value.first.trim(), last: value.last.trim() };
+    return;
+  }
+  if (key === 'age') {
+    user.age = value;
+    return;
+  }
+  user[key] = value.trim();
+}
+
 router.use(requireAuth);
 
 function findUser(db, userId) {
@@ -47,10 +78,13 @@ router.patch('/', async (req, res) => {
     if (!PATCH_WHITELIST.has(key)) {
       return badRequest(res);
     }
+    if (!isValidPatchValue(key, body[key])) {
+      return badRequest(res);
+    }
   }
 
   for (const key of keys) {
-    user[key] = body[key];
+    applyPatchValue(user, key, body[key]);
   }
 
   await db.write();
