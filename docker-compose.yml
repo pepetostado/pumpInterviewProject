@@ -4,8 +4,12 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
+      target: dev
     env_file:
       - .env
+    volumes:
+      - ./api:/app
+      - api-node-modules:/app/node_modules
     networks:
       - bankzero-network
     
@@ -23,12 +27,15 @@ services:
       context: ./nginx
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - 82:80
     depends_on:
       - api
       - client
     networks:
       - bankzero-network
+
+volumes:
+  api-node-modules:
 
 networks:
   bankzero-network:

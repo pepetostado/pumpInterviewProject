@@ -29,3 +29,10 @@ This exercise is meant showcase your creativity and talent in problem solving ag
 * Functional Tests of the UI
 
 ### Assignment for Pepe Tostado
+
+To reproduce on your machine you only need npm & docker
+
+## Setup the backend
+1. >> cd api 
+2. >> npm init -y && 
+3. >> npm install express cors jsonwebtoken lowdb bcryptjs

@@ -1,10 +1,16 @@
-FROM node:20-alpine
+FROM node:20-alpine AS base
 
 WORKDIR /app
 COPY package*.json ./
 
-RUN npm ci --only=production
+FROM base AS dev
+RUN npm ci
 COPY . .
+EXPOSE 3001
+CMD ["npm", "start"]
 
+FROM base AS prod
+RUN npm ci --omit=dev
+COPY . .
 EXPOSE 3001
 CMD ["node", "server.js"]
