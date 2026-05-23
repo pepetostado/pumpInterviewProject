@@ -166,6 +166,7 @@ Makefile            → dev-up, prod-up, etc.
 - session store / redis
 - admin user list endpoints
 
+
 ## references
 
 - train of thought / older notes: `pepe/doc1.ToThought.md`
@@ -173,3 +174,4 @@ Makefile            → dev-up, prod-up, etc.
 - assignment text: root `README.md`
 
 last updated: after docker dev/prod was green, before lowdb phase.
+
