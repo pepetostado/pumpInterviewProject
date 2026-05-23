@@ -32,7 +32,12 @@ This exercise is meant showcase your creativity and talent in problem solving ag
 
 To reproduce on your machine you only need npm & docker
 
-## Setup the backend
-1. >> cd api 
-2. >> npm init -y && 
-3. >> npm install express cors jsonwebtoken lowdb bcryptjs
+## DEV
+
+>> cp env.example .env
+>> docker compose up --build
+Visit → http://localhost:82
+
+## PROD
+
+>> docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build

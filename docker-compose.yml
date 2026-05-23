@@ -7,6 +7,9 @@ services:
       target: dev
     env_file:
       - .env
+    environment:
+      PORT: "3001"
+      NODE_ENV: development
     volumes:
       - ./api:/app
       - api-node-modules:/app/node_modules
@@ -17,8 +20,18 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      target: dev
+    env_file:
+      - .env
+    environment:
+      PORT: "3000"
+      NODE_ENV: development
+      HOSTNAME: 0.0.0.0
     depends_on:
       - api
+    volumes:
+      - ./client:/app
+      - client-node-modules:/app/node_modules
     networks:
       - bankzero-network
     
@@ -36,6 +49,7 @@ services:
 
 volumes:
   api-node-modules:
+  client-node-modules:
 
 networks:
   bankzero-network:

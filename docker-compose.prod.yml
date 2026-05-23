@@ -1,0 +1,40 @@
+services:
+
+  api:
+    build:
+      target: prod
+    environment:
+      PORT: "3001"
+      NODE_ENV: production
+    volumes: !reset []
+    
+  client:
+    build:
+      target: prod
+    environment:
+      PORT: "3000"
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+    depends_on:
+      - api
+    volumes: !reset []
+    
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 82:80
+    depends_on:
+      - api
+      - client
+    networks:
+      - bankzero-network
+
+volumes:
+  api-node-modules:
+  client-node-modules:
+
+networks:
+  bankzero-network:
+  
