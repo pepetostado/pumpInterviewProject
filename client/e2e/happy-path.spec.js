@@ -1,6 +1,7 @@
 // unauth && / --> login --> home --> edit (persists) --> logout && clears token --> /login
 import { test, expect } from '@playwright/test';
 import { ACTIVE_USER, E2E_PHONE, TOKEN_KEY } from './fixtures.js';
+import { loginAs } from './login.js';
 
 test.beforeAll(async ({ request }) => {
   const res = await request.get('/api/health');
@@ -14,6 +15,7 @@ test.beforeAll(async ({ request }) => {
 test.beforeEach(async ({ page }) => {
   await page.goto('/login', { waitUntil: 'domcontentloaded' });
   await page.evaluate((key) => localStorage.removeItem(key), TOKEN_KEY);
+  await expect(page.getByTestId('login-submit')).toBeEnabled();
 });
 
 test('guest visiting home is redirected to login', async ({ page }) => {
@@ -22,20 +24,13 @@ test('guest visiting home is redirected to login', async ({ page }) => {
 });
 
 test('login, view balance, edit phone, logout clears token', async ({ page }) => {
-  await page.getByLabel('Email').fill(ACTIVE_USER.email);
-  await page.getByLabel('Password').fill(ACTIVE_USER.password);
-  await Promise.all([
-    page.waitForResponse(
-      (r) => r.url().includes('/api/auth/login') && r.status() === 200,
-    ),
-    page.getByTestId('login-submit').click(),
-  ]);
-  await expect(page).toHaveURL('/', { timeout: 15_000 });
+  await loginAs(page);
   await expect(page.getByText('Balance')).toBeVisible({ timeout: 15_000 });
   await expect(page.getByText(ACTIVE_USER.balance)).toBeVisible();
   await expect(page.getByText(ACTIVE_USER.email).first()).toBeVisible();
 
   await page.getByTestId('edit-profile').click();
+  await expect(page.getByTestId('save-profile')).toBeEnabled();
   await page.getByTestId('edit-phone').fill(E2E_PHONE);
   await page.getByTestId('save-profile').click();
 
